@@ -6,8 +6,8 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
-(setq user-full-name "John Doe"
-      user-mail-address "john@doe.com")
+(setq user-full-name "Diego Kiedanski"
+      user-mail-address "dkiedanski@gmail.com")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
@@ -41,6 +41,39 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
+
+
+;; Cofigurations about org
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "~/org/misc.org" "Tasks")
+         "* TODO %?\n  %i\n  %a")))
+
+;; Record the time when done
+(setq org-log-done 'time)
+
+;; Org-roam
+(setq org-roam-directory "~/org/knowledge")
+(setq org-roam-dailies-directory "journal/")
+
+(setq org-roam-dailies-capture-templates
+      '(("d" "default" entry
+         "* %T\n\n %? \n"
+         :target (file+head "%<%Y-%m-%d>.org"
+                            "#+title: %<%Y-%m-%d>\n"))))
+
+;; Keybindings
+;;
+(map! :leader
+      (:prefix-map ("j" . "Journal")
+       (
+        :desc "Append to today's journal" "t" #'org-roam-dailies-capture-today
+        :desc "Show today's journal" "s" #'org-roam-dailies-goto-today)))
+
+
+(use-package! org-roam-bibtex
+  :after org-roam
+  :config
+  (require 'org-ref)) ; optional: if using Org-ref v2 or v3 citation link
 
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
